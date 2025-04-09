@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Reserva - Hotel Cloud Suites</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style>
+        .header-section {
+            background-color: #28a745;
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .room-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .room-preview {
+            display: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Hotel Cloud Suites</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reservations">Ver Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/reservation/new">Nueva Reserva</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="header-section">
+        <div class="container">
+            <h1>Nueva Reserva</h1>
+            <p class="lead">Complete el formulario para crear una nueva reserva.</p>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <!-- Mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <!-- Formulario de reserva -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Detalles de la Reserva</h5>
+                        
+                        <form action="/reservation/new" method="POST" enctype="multipart/form-data">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="guest_name" class="form-label">Nombre del Huésped</label>
+                                    <input type="text" class="form-control" id="guest_name" name="guest_name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="contact_email" class="form-label">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="contact_email" name="contact_email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="check_in_date" class="form-label">Fecha de Entrada</label>
+                                    <input type="date" class="form-control" id="check_in_date" name="check_in_date" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="check_out_date" class="form-label">Fecha de Salida</label>
+                                    <input type="date" class="form-control" id="check_out_date" name="check_out_date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="room_number" class="form-label">Número de Habitación</label>
+                                <select class="form-select" id="room_number" name="room_number" required>
+                                    <option value="" selected disabled>Seleccione una habitación</option>
+                                    <option value="101">101 - Habitación Estándar</option>
+                                    <option value="102">102 - Habitación Estándar</option>
+                                    <option value="103">103 - Habitación Estándar</option>
+                                    <option value="201">201 - Habitación Deluxe</option>
+                                    <option value="202">202 - Habitación Deluxe</option>
+                                    <option value="301">301 - Suite Ejecutiva</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="identity_document" class="form-label">Documento de Identidad</label>
+                                <input type="file" class="form-control" id="identity_document" name="identity_document" accept=".pdf,.jpg,.jpeg,.png">
+                                <div class="form-text">Formatos aceptados: PDF, JPG, PNG. Máximo 5MB.</div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">Crear Reserva</button>
+                                <a href="/reservations" class="btn btn-secondary">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vista previa de habitación -->
+            <div class="col-lg-4">
+                <div id="roomPreview" class="room-preview">
+                    <h5>Vista Previa de la Habitación</h5>
+                    <img id="roomImage" class="room-image" src="" alt="Imagen de la habitación">
+                    <h6 id="roomTitle"></h6>
+                    <p id="roomDescription"></p>
+                    <ul id="roomFeatures"></ul>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Verificar Disponibilidad</h5>
+                        <p>Seleccione fechas y presione el botón para verificar disponibilidad de habitaciones:</p>
+                        <button id="checkAvailabilityBtn" class="btn btn-info w-100">Verificar Disponibilidad</button>
+                        <div id="availabilityResults" class="mt-3" style="display: none;">
+                            <h6>Habitaciones Disponibles:</h6>
+                            <div id="availableRoomsList"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos simulados de habitaciones
+        const roomData = {
+            '101': {
+                title: 'Habitación Estándar - Individual',
+                description: 'Habitación cómoda con todas las comodidades básicas para una estancia placentera.',
+                image: 'static/rooms/room1.jpg',
+                features: ['Cama individual', 'Baño privado', 'TV por cable', 'Wi-Fi gratis']
+            },
+            '102': {
+                title: 'Habitación Estándar - Doble',
+                description: 'Habitación espaciosa con dos camas individuales, ideal para amigos o colegas.',
+                image: 'static/rooms/room2.jpg',
+                features: ['Dos camas individuales', 'Baño privado', 'TV por cable', 'Wi-Fi gratis']
+            },
+            '103': {
+                title: 'Habitación Estándar - Matrimonial',
+                description: 'Habitación confortable con una cama matrimonial para parejas.',
+                image: 'static/rooms/room3.jpg',
+                features: ['Cama matrimonial', 'Baño privado', 'TV por cable', 'Wi-Fi gratis']
+            },
+            '201': {
+                title: 'Habitación Deluxe',
+                description: 'Habitación premium con más espacio y comodidades adicionales para una estancia superior.',
+                image: 'static/rooms/room1.jpg',
+                features: ['Cama king', 'Sala de estar', 'Baño con jacuzzi', 'Minibar', 'TV Smart']
+            },
+            '202': {
+                title: 'Habitación Deluxe - Vista al Mar',
+                description: 'Habitación premium con vistas panorámicas al océano y comodidades superiores.',
+                image: 'static/rooms/room2.jpg',
+                features: ['Cama king', 'Balcón privado', 'Baño con jacuzzi', 'Minibar', 'TV Smart']
+            },
+            '301': {
+                title: 'Suite Ejecutiva',
+                description: 'Nuestra suite más lujosa con todo lo que necesitas para una estancia inolvidable.',
+                image: 'static/rooms/room3.jpg',
+                features: ['Cama king', 'Sala separada', 'Comedor', 'Bañera de hidromasaje', 'Terraza privada']
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const roomSelect = document.getElementById('room_number');
+            const roomPreview = document.getElementById('roomPreview');
+            const roomImage = document.getElementById('roomImage');
+            const roomTitle = document.getElementById('roomTitle');
+            const roomDescription = document.getElementById('roomDescription');
+            const roomFeatures = document.getElementById('roomFeatures');
+            
+            // Mostrar vista previa cuando se selecciona una habitación
+            roomSelect.addEventListener('change', function() {
+                const selectedRoom = roomSelect.value;
+                if (selectedRoom && roomData[selectedRoom]) {
+                    const room = roomData[selectedRoom];
+                    roomImage.src = room.image;
+                    roomTitle.textContent = room.title;
+                    roomDescription.textContent = room.description;
+                    
+                    // Crear lista de características
+                    roomFeatures.innerHTML = '';
+                    room.features.forEach(feature => {
+                        const li = document.createElement('li');
+                        li.textContent = feature;
+                        roomFeatures.appendChild(li);
+                    });
+                    
+                    roomPreview.style.display = 'block';
+                } else {
+                    roomPreview.style.display = 'none';
+                }
+            });
+            
+            // Configurar fecha mínima para check-in y check-out
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('check_in_date').min = today;
+            
+            document.getElementById('check_in_date').addEventListener('change', function() {
+                // Establecer fecha mínima de check-out un día después del check-in
+                const checkInDate = new Date(this.value);
+                checkInDate.setDate(checkInDate.getDate() + 1);
+                const minCheckOut = checkInDate.toISOString().split('T')[0];
+                document.getElementById('check_out_date').min = minCheckOut;
+            });
+            
+            // Verificar disponibilidad
+            document.getElementById('checkAvailabilityBtn').addEventListener('click', function() {
+                const checkIn = document.getElementById('check_in_date').value;
+                const checkOut = document.getElementById('check_out_date').value;
+                
+                if (!checkIn || !checkOut) {
+                    alert('Por favor seleccione fechas de entrada y salida');
+                    return;
+                }
+                
+                // Consultar la API de disponibilidad
+                fetch(`/rooms/availability?check_in=${checkIn}&check_out=${checkOut}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const availableRoomsList = document.getElementById('availableRoomsList');
+                        const availabilityResults = document.getElementById('availabilityResults');
+                        
+                        if (data.available_rooms && data.available_rooms.length > 0) {
+                            availableRoomsList.innerHTML = '';
+                            data.available_rooms.forEach(room => {
+                                const roomInfo = roomData[room] || { title: `Habitación ${room}` };
+                                const div = document.createElement('div');
+                                div.innerHTML = `<div class="form-check">
+                                    <input class="form-check-input room-option" type="radio" name="room_option" 
+                                           id="room${room}" value="${room}">
+                                    <label class="form-check-label" for="room${room}">
+                                        ${roomInfo.title}
+                                    </label>
+                                </div>`;
+                                availableRoomsList.appendChild(div);
+                            });
+                            
+                            // Agregar evento para seleccionar habitación del selector
+                            document.querySelectorAll('.room-option').forEach(option => {
+                                option.addEventListener('change', function() {
+                                    if (this.checked) {
+                                        document.getElementById('room_number').value = this.value;
+                                        // Disparar el evento change para actualizar la vista previa
+                                        const event = new Event('change');
+                                        document.getElementById('room_number').dispatchEvent(event);
+                                    }
+                                });
+                            });
+                            
+                        } else {
+                            availableRoomsList.innerHTML = '<p class="text-danger">No hay habitaciones disponibles para las fechas seleccionadas.</p>';
+                        }
+                        
+                        availabilityResults.style.display = 'block';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Ocurrió un error al verificar la disponibilidad');
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

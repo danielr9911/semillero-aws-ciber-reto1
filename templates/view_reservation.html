@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de Reserva - Hotel Cloud Suites</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        .header-section {
+            background-color: #17a2b8;
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .reservation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .status-badge {
+            font-size: 1rem;
+        }
+        .document-preview {
+            max-height: 200px;
+            max-width: 100%;
+            margin-top: 1rem;
+        }
+        .room-image {
+            width: 100%;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Hotel Cloud Suites</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reservations">Ver Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reservation/new">Nueva Reserva</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Encabezado -->
+    <div class="header-section">
+        <div class="container">
+            <div class="reservation-header">
+                <div>
+                    <h1>Reserva #{{ reservation.ReservationID[:8] }}</h1>
+                    <p class="lead">Detalle completo de la reserva.</p>
+                </div>
+                <div>
+                    <span class="badge status-badge
+                        {% if reservation.Status == 'Confirmada' %} bg-success
+                        {% elif reservation.Status == 'Pendiente' %} bg-warning text-dark
+                        {% elif reservation.Status == 'Conflicto' %} bg-danger
+                        {% elif reservation.Status == 'Cancelada' %} bg-secondary
+                        {% endif %}">
+                        {{ reservation.Status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <!-- Mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Alerta de conflicto -->
+        {% if reservation.Status == 'Conflicto' %}
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <strong>¡Alerta de conflicto!</strong> Esta reserva tiene conflictos con otras reservaciones para la misma habitación y fechas.
+            Por favor contacte al otro huésped o reasigne una habitación diferente.
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <!-- Columna de información principal -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Información de la Reserva</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>ID de Reserva:</strong> {{ reservation.ReservationID }}</p>
+                                <p><strong>Nombre del Huésped:</strong> {{ reservation.GuestName }}</p>
+                                <p><strong>Email de Contacto:</strong> {{ reservation.ContactEmail }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Fecha de Entrada:</strong> {{ reservation.CheckInDate }}</p>
+                                <p><strong>Fecha de Salida:</strong> {{ reservation.CheckOutDate }}</p>
+                                <p><strong>Habitación:</strong> {{ reservation.RoomNumber }}</p>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <p><strong>Estado:</strong> 
+                            <span class="badge
+                                {% if reservation.Status == 'Confirmada' %} bg-success
+                                {% elif reservation.Status == 'Pendiente' %} bg-warning text-dark
+                                {% elif reservation.Status == 'Conflicto' %} bg-danger
+                                {% elif reservation.Status == 'Cancelada' %} bg-secondary
+                                {% endif %}">
+                                {{ reservation.Status }}
+                            </span>
+                        </p>
+                        
+                        <p><strong>Fecha de Creación:</strong> {{ reservation.CreatedAt }}</p>
+                        {% if reservation.get('UpdatedAt') %}
+                        <p><strong>Última Actualización:</strong> {{ reservation.UpdatedAt }}</p>
+                        {% endif %}
+                        
+                        <hr>
+                        
+                        <div class="d-flex">
+                            <!-- Botón de editar -->
+                            <a href="/reservation/edit/{{ reservation.ReservationID }}" class="btn btn-warning me-2">
+                                <i class="bi bi-pencil"></i> Editar Reserva
+                            </a>
+                            
+                            <!-- Cancelar reserva (si no está cancelada) -->
+                            {% if reservation.Status != 'Cancelada' %}
+                            <form action="/reservation/cancel/{{ reservation.ReservationID }}" method="POST" class="me-2">
+                                <button type="submit" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar Reserva
+                                </button>
+                            </form>
+                            {% endif %}
+                            
+                            <!-- Eliminar reserva -->
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash"></i> Eliminar Reserva
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Información del documento de identidad -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Documento de Identidad</h5>
+                        
+                        {% if reservation.DocumentID and reservation.DocumentID != 'Sin documento' %}
+                            <p>Se ha subido un documento de identidad para esta reserva.</p>
+                            
+                            <!-- Si es una imagen, mostrar vista previa -->
+                            {% if reservation.DocumentID.endswith('.jpg') or reservation.DocumentID.endswith('.jpeg') or reservation.DocumentID.endswith('.png') %}
+                                <img src="{{ url_for('serve_document', filename=reservation.DocumentID) }}" 
+                                    alt="Documento de identidad" class="document-preview">
+                                <div class="mt-2">
+                                    <a href="{{ url_for('serve_document', filename=reservation.DocumentID) }}" 
+                                    target="_blank" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i> Ver Completo
+                                    </a>
+                                </div>
+                            {% else %}
+                                <p>Documento PDF subido: {{ reservation.DocumentID }}</p>
+                                <a href="{{ url_for('serve_document', filename=reservation.DocumentID) }}" 
+                                target="_blank" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-file-earmark-pdf"></i> Ver Documento
+                                </a>
+                            {% endif %}
+                        {% else %}
+                        <p>No se ha subido ningún documento de identidad para esta reserva.</p>
+                        <!-- ... resto del código ... -->
+                        {% endif %}
+                    </div>
+                </div>
+            
+            <!-- Columna lateral -->
+            <div class="col-lg-4">
+                <!-- Información de la habitación -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Habitación {{ reservation.RoomNumber }}</h5>
+                        
+                        <!-- Imagen de la habitación (simulada) -->
+                        <img id="roomImage" class="room-image mb-3" src=""
+                             alt="Habitación {{ reservation.RoomNumber }}">
+                        
+                        <h6 id="roomTitle"></h6>
+                        <p id="roomDescription"></p>
+                        
+                        <h6>Características:</h6>
+                        <ul id="roomFeatures"></ul>
+                    </div>
+                </div>
+                
+                <!-- Resumen de la estancia -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumen de la Estancia</h5>
+                        
+                        <p id="stayDuration"></p>
+                        <p id="checkinInfo"><i class="bi bi-calendar-check"></i> Check-in: {{ reservation.CheckInDate }}</p>
+                        <p id="checkoutInfo"><i class="bi bi-calendar-x"></i> Check-out: {{ reservation.CheckOutDate }}</p>
+                        
+                        {% if reservation.Status == 'Confirmada' %}
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle"></i> Reserva confirmada y lista para su estancia.
+                            </div>
+                        {% elif reservation.Status == 'Pendiente' %}
+                            <div class="alert alert-warning">
+                                <i class="bi bi-clock"></i> Esta reserva está pendiente de confirmación.
+                            </div>
+                        {% elif reservation.Status == 'Cancelada' %}
+                            <div class="alert alert-secondary">
+                                <i class="bi bi-x-circle"></i> Esta reserva ha sido cancelada.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro que desea eliminar la reserva para <strong>{{ reservation.GuestName }}</strong>?</p>
+                    <p>Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form action="/reservation/delete/{{ reservation.ReservationID }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos simulados de habitaciones
+        const roomData = {
+            '101': {
+                title: 'Habitación Estándar - Individual',
+                description: 'Habitación cómoda con todas las comodidades básicas para una estancia placentera.',
+                image: 'static/rooms/room1.jpg',
+                features: ['Cama individual', 'Baño privado', 'TV por cable', 'Wi-Fi gratis']
+            },
+            '102': {
+                title: 'Habitación Estándar - Doble',
+                description: 'Habitación espaciosa con dos camas individuales, ideal para amigos o colegas.',
+                image: 'static/rooms/room2.jpg',
+                features: ['Dos camas individuales', 'Baño privado', 'TV por cable', 'Wi-Fi gratis']
+            },
+            '103': {
+                title: 'Habitación Estándar - Matrimonial',
+                description: 'Habitación confortable con una cama matrimonial para parejas.',
+                image: 'static/rooms/room3.jpg',
+                features: ['Cama matrimonial', 'Baño privado', 'TV por cable', 'Wi-Fi gratis']
+            },
+            '201': {
+                title: 'Habitación Deluxe',
+                description: 'Habitación premium con más espacio y comodidades adicionales para una estancia superior.',
+                image: 'static/rooms/room1.jpg',
+                features: ['Cama king', 'Sala de estar', 'Baño con jacuzzi', 'Minibar', 'TV Smart']
+            },
+            '202': {
+                title: 'Habitación Deluxe - Vista al Mar',
+                description: 'Habitación premium con vistas panorámicas al océano y comodidades superiores.',
+                image: 'static/rooms/room2.jpg',
+                features: ['Cama king', 'Balcón privado', 'Baño con jacuzzi', 'Minibar', 'TV Smart']
+            },
+            '301': {
+                title: 'Suite Ejecutiva',
+                description: 'Nuestra suite más lujosa con todo lo que necesitas para una estancia inolvidable.',
+                image: 'static/rooms/room3.jpg',
+                features: ['Cama king', 'Sala separada', 'Comedor', 'Bañera de hidromasaje', 'Terraza privada']
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener el número de habitación de la reserva
+            const roomNumber = "{{ reservation.RoomNumber }}";
+            
+            // Mostrar información de la habitación
+            if (roomNumber && roomData[roomNumber]) {
+                const room = roomData[roomNumber];
+                document.getElementById('roomImage').src = room.image;
+                document.getElementById('roomTitle').textContent = room.title;
+                document.getElementById('roomDescription').textContent = room.description;
+                
+                // Crear lista de características
+                const roomFeatures = document.getElementById('roomFeatures');
+                roomFeatures.innerHTML = '';
+                room.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature;
+                    roomFeatures.appendChild(li);
+                });
+            } else {
+                document.getElementById('roomImage').src = '/static/rooms/default.jpg';
+                document.getElementById('roomTitle').textContent = `Habitación ${roomNumber}`;
+                document.getElementById('roomDescription').textContent = "Información no disponible para esta habitación.";
+            }
+            
+            // Calcular duración de la estancia
+            const checkIn = new Date("{{ reservation.CheckInDate }}");
+            const checkOut = new Date("{{ reservation.CheckOutDate }}");
+            const diffTime = Math.abs(checkOut - checkIn);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('stayDuration').innerHTML = 
+                `<i class="bi bi-calendar-range"></i> <strong>${diffDays}</strong> ${diffDays === 1 ? 'noche' : 'noches'} de estancia`;
+        });
+    </script>
+</body>
+</html>
