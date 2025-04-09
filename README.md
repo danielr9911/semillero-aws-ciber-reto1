@@ -175,21 +175,37 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
    - Selecciona "VPC y más" para crear todos los recursos asociados.
    - Nombre del proyecto: `semillero-[USUARIO]-vpc-hotel`
    - Bloque de CIDR IPv4: `10.0.0.0/16`
+
+3. **Configuración de subnets:**
    - Número de zonas de disponibilidad: `1`
    - Número de subnets públicas: `1`
    - Número de subnets privadas: `1`
-   - Endpoints de VPC: Gateway endpoints (S3 y DynamoDB)
-   - Haz clic en "Crear VPC".
 
-3. **Revisar componentes creados:**
-   - Una vez completado, tendrás los siguientes recursos:
-     - VPC con CIDR 10.0.0.0/16
-     - 1 subnet pública (donde colocaremos la instancia EC2)
-     - 1 subnet privada (para recursos que no necesitan acceso directo a internet)
-     - Internet Gateway (conectado a la subnet pública)
-     - NAT Gateway (para permitir que recursos en subnet privada accedan a internet)
-     - Tablas de enrutamiento adecuadamente configuradas
-     - Endpoints para S3 y DynamoDB
+4. **Gateway NAT:**
+   - Selecciona `1 por zona de disponibilidad` 
+   - Esto creará una NAT Gateway que permite que los recursos en la subnet privada (Lambda) puedan acceder a internet
+
+5. **Puntos de enlace a la VPC:**
+   - En esta sección es donde se configuran los "Gateway endpoints"
+   - Selecciona `Gateway de S3`
+   - Si aparece la opción para DynamoDB, selecciónala también
+
+6. **Opciones de DNS:**
+   - Mantén ambas casillas marcadas:
+     - Habilitar nombres de host DNS
+     - Habilitar la resolución de DNS
+
+7. **Haz clic en "Crear VPC".**
+
+8. **Añadir Gateway Endpoint para DynamoDB (si no estaba disponible antes):**
+   - Una vez creada la VPC, ve a la sección "Puntos de conexión" en el panel izquierdo
+   - Haz clic en "Crear punto de conexión"
+   - Categoría de servicio: Servicios de AWS
+   - Busca y selecciona "com.amazonaws.us-east-1.dynamodb" (ajusta la región si estás en otra)
+   - Selecciona la VPC que acabas de crear
+   - En "Configurar tablas de enrutamiento", selecciona las tablas de ambas subnets (pública y privada)
+   - Política: Acceso completo
+   - Haz clic en "Crear punto de conexión"
 
 ## Paso 5: Creación del rol IAM para Lambda
 
