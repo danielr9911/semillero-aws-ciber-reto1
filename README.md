@@ -5,7 +5,7 @@
 Para la ejecución de los 3 retos de la Fase 1 del Semillero AWS Ciber🚀supondremos un escenario base que nos servirá para aprender los servicios básicos de AWS, su configuración y funcionamiento.
 
 ### Objetivo general:
-- Desarrollar las competencias fundamentales en AWS de manera práctica, desde el nivel principiante hasta un nivel práctico intermedio, capacitando a los participantes para diseñar, implementar y mantener arquitecturas seguras y eficientes en la nube que cumplan con los estándares y políticas de Bancolombia, preparándolos así para contribuir efectivamente en iniciativas de transformación digital y proyectos de migración dentro de la organización.
+- Desarrollar las competencias fundamentales en AWS de manera práctica, desde el nivel principiante hasta un nivel práctico intermedio, capacitando a los participantes para diseñar, implementar y mantener arquitecturas seguras y eficientes en la nube que cumplan con los estándares y políticas de la organización, preparándolos así para contribuir efectivamente en iniciativas de transformación digital y proyectos de migración dentro de la organización.
 
 ### Objetivo específico del Reto 1:
 - Aprender a utilizar la consola de administración de AWS, familiarizándose con su interfaz, servicios principales y navegación eficiente
@@ -60,7 +60,7 @@ El sistema constará de los siguientes componentes de AWS:
 
 La organización cuenta con un conjunto de cuentas independiente a las productivas para que los equipos realicen pruebas de concepto.
 
-Para el desarrollo del Semillero, utilizaremos la cuenta CiberseguridadSBX. Esta cuenta genera una facturación por uso para el banco, por lo que debemos ser muy responsables en la creación de nuevos recursos, limitándonos a los indicados en el reto.
+Para el desarrollo del Semillero, utilizaremos la cuenta CiberseguridadSBX. Esta cuenta genera una facturación por uso para la organización, por lo que debemos ser muy responsables en la creación de nuevos recursos, limitándonos a los indicados en el reto.
 
 **Enlace para Consola de AWS SBX:**  
 https://d-906705dbfe.awsapps.com/start#/
@@ -160,7 +160,7 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
    - Haz clic en "Crear suscripción".
    - Protocolo: Email.
    - Punto de conexión: Ingresa tu dirección de correo electrónico (simulando ser el administrador del hotel).
-     Puedes usar tu correo Bancolombia
+     Puedes usar tu correo corporativo
    - Haz clic en "Crear suscripción".
    - **Importante**: Abre tu correo electrónico y busca un correo de AWS Notification.
      Debes confirmar la suscripción haciendo clic en el enlace recibido.
@@ -225,7 +225,7 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
    - Busca "AmazonDynamoDBFullAccess" y selecciónalo.
    - Busca "AmazonSNSFullAccess" y selecciónalo.
    - Nota: Las políticas que aparecen con la Caja amarilla son las políticas administradas por AWS. La mayoría de ellas son muy permisivas y útiles en pruebas de concepto y simuladas como este caso. 
-     En aplicación del banco, NUNCA se deben utilizar estás políticas y se debe de definir acción por acción de acuerdo con lo que se requiera, siguiendo el principio del mínimo privilegio.
+     En aplicaciones productivas, NUNCA se deben utilizar estás políticas y se debe de definir acción por acción de acuerdo con lo que se requiera, siguiendo el principio del mínimo privilegio.
    - Nota 2: En este caso no le asignaremos un Permission Boundary (Límite de permisos), sin embargo, en aplicaciones bando SIEMPRE se debe de asignar el Permission Boundary de la organización.
    - Haz clic en "Siguiente".
 
@@ -386,7 +386,7 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
    - En la parte superior, haz clic en "Conectar"
    - Deja todos los valores por defecto y haz clic nuevamente en "Conectar" en la parte inferior derecha
    
-   Nota: Esta conexión se realiza a través de Session Manager, un servicio de AWS que permite realizar una conexión directa al servidor. En el banco se permite realizar para cuentas pre productivas, para cuentas productivas este proceso se realiza a través de CyberArk.
+   Nota: Esta conexión se realiza a través de Session Manager, un servicio de AWS que permite realizar una conexión directa al servidor. En la organización se permite realizar para cuentas pre productivas, para cuentas productivas este proceso se realiza a través de CyberArk.
    
    - Se deberá abrir un terminal que nos permitirá ejecutar comandos dentro de la instancia
 
