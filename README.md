@@ -221,6 +221,7 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
 
 3. **Agregar permisos:**
    - En el campo de búsqueda, escribe "AWSLambdaBasicExecutionRole" y selecciónalo.
+   - Busca "AWSLambdaVPCAccessExecutionRole" y selecciónalo.
    - Busca "AmazonDynamoDBFullAccess" y selecciónalo.
    - Busca "AmazonSNSFullAccess" y selecciónalo.
    - Nota: Las políticas que aparecen con la Caja amarilla son las políticas administradas por AWS. La mayoría de ellas son muy permisivas y útiles en pruebas de concepto y simuladas como este caso. 
