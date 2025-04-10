@@ -331,7 +331,7 @@ Se deja el paso a paso para que tengan presente cómo se configura y que se real
 3. **Agregar permisos:**
    - Busca y selecciona "AmazonS3FullAccess".
    - Busca y selecciona "AmazonDynamoDBFullAccess".
-   - Busca y selecciona "AmazonSSMFullAccess".
+   - Busca y selecciona "AmazonSSMManagedInstanceCore".
    - Haz clic en "Siguiente".
 
 4. **Nombrar el rol:**
