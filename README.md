@@ -166,6 +166,9 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
      Debes confirmar la suscripción haciendo clic en el enlace recibido.
 
 ## Paso 4: Creación de VPC con Subnets Pública y Privada
+> NOTA: Debido a la limitante técnica que solo se permiten crear 5 VPC por cuenta de AWS. Se debe saltar el paso 4 y utilizar la siguiente VPC creada para el reto:
+semillero-danirend-vpc-hotel
+Se deja el paso a paso para que tengan presente cómo se configura y que se realizó:
 
 1. **Acceder a VPC:**
    - En la barra de búsqueda superior, escribe "VPC" y selecciona el servicio.
@@ -328,6 +331,7 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
 3. **Agregar permisos:**
    - Busca y selecciona "AmazonS3FullAccess".
    - Busca y selecciona "AmazonDynamoDBFullAccess".
+   - Busca y selecciona "AmazonSSMFullAccess".
    - Haz clic en "Siguiente".
 
 4. **Nombrar el rol:**
@@ -360,7 +364,6 @@ A continuación, se deja un paso a paso detallado de cómo realizar la implement
      - Nombre del grupo de seguridad: `semillero-[USUARIO]-sg-web-server`
      - Descripción: Grupo de seguridad para el servidor web
      - Reglas de entrada: Añade las siguientes reglas:
-       - Tipo: "SSH". Tipo de origen: "Mi IP"
        - Tipo: "HTTP". Tipo de origen: "Cualquier lugar"
        - Tipo: "HTTPS". Tipo de origen: "Cualquier lugar"
        - Tipo: "TCP personalizado". Intervalo de puertos: "5000". Tipo de origen: "Cualquier lugar"
