@@ -199,7 +199,10 @@ def edit_reservation(reservation_id):
                     Key={'ReservationID': reservation_id},
                     UpdateExpression='SET GuestName = :gn, ContactEmail = :ce, RoomNumber = :rn, ' +
                                     'CheckInDate = :ci, CheckOutDate = :co, Guests = :g, ' +
-                                    'Comments = :cm, DocumentID = :di, Status = :st, UpdatedAt = :ua',
+                                    'Comments = :cm, DocumentID = :di, #status = :st, UpdatedAt = :ua',
+                    ExpressionAttributeNames={
+                        '#status': 'Status'  # Usar alias para la palabra reservada
+                    },
                     ExpressionAttributeValues={
                         ':gn': guest_name,
                         ':ce': contact_email,
