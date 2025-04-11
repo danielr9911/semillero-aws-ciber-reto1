@@ -253,6 +253,7 @@ Se deja el paso a paso para que tengan presente cómo se configura y que se real
      - VPC: Selecciona la VPC que creaste `semillero-[USUARIO]-vpc-hotel`
      - Subredes: Selecciona la subnet **privada** creada
      - Grupos de seguridad: Crea un nuevo grupo de seguridad
+       Nota: Si no te permite crearlo en el Menú, debes ir por el servicio EC2 y crear el Grupo de seguridad para luego seleccionarlo en este paso.
        - Nombre: `semillero-[USUARIO]-sg-lambda`
        - Descripción: Grupo de seguridad para función Lambda
        - No necesita reglas de entrada adicionales
@@ -387,9 +388,10 @@ Se deja el paso a paso para que tengan presente cómo se configura y que se real
    - Espera a que la instancia esté en estado "running" o "en ejecución".
    - Haz clic en el id de la instancia para abrir el detalle
    - En la parte superior, haz clic en "Conectar"
-   - Deja todos los valores por defecto y haz clic nuevamente en "Conectar" en la parte inferior derecha
+   - Te aparecerán 4 posibles formas de conectarte, selecciona "Administrador de sesiones" o "Session Manager"
+   - Haz clic nuevamente en "Conectar" en la parte inferior derecha
    
-   Nota: Esta conexión se realiza a través de Session Manager, un servicio de AWS que permite realizar una conexión directa al servidor. En la organización se permite realizar para cuentas pre productivas, para cuentas productivas este proceso se realiza a través de CyberArk.
+   Nota: Esta conexión se realiza a través de Session Manager, un servicio de AWS que permite realizar una conexión directa al servidor. En la organización se permite realizar unicamente para cuentas pre-productivas. Para cuentas productivas este proceso se realiza a través de CyberArk.
    
    - Se deberá abrir un terminal que nos permitirá ejecutar comandos dentro de la instancia
 
