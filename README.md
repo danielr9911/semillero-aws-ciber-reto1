@@ -442,8 +442,8 @@ Para guardar los cambios en nano:
 7. **Crear directorios para almacenamiento local:**
    ```bash
    # Crear directorios para documentos e imágenes locales
-    mkdir -p /home/ec2-user/hotel-app/local_storage/documents
-    sudo chmod 777 /home/ec2-user/hotel-app/local_storage/documents
+    mkdir -p /home/ssm-user/hotel-app/local_storage/documents
+    sudo chmod 777 /home/ssm-user/hotel-app/local_storage/documents
    ```
 
 8. **Ejecutar la aplicación:**
@@ -455,8 +455,8 @@ Para guardar los cambios en nano:
     After=network.target
 
     [Service]
-    User=ec2-user
-    WorkingDirectory=/home/ec2-user/hotel-app
+    User=ssm-user
+    WorkingDirectory=/home/ssm-user/hotel-app
     ExecStart=/usr/bin/python3 app.py
     Restart=always
 
