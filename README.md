@@ -408,18 +408,20 @@ Se deja el paso a paso para que tengan presente cómo se configura y que se real
 4. **Clonar el repositorio:**
    ```bash
    # Crear directorio para la aplicación
-    mkdir -p /home/ec2-user/hotel-app
-    cd /home/ec2-user/hotel-app
+    mkdir -p /home/ssm-user/hotel-app
+    cd /home/ssn-user/hotel-app
 
     # Clonar el repositorio
     git clone https://github.com/danielr9911/semillero-aws-ciber-reto1.git .
 
     # Dar permisos adecuados
-    sudo chown -R ec2-user:ec2-user /home/ec2-user/hotel-app
+    sudo chown -R ssm-user:ssm-user /home/ssm-user/hotel-app
    ```
 
 5. **Instalar dependencias de Python:**
    ```bash
+   # Integresar a la carpeta
+   cd hotel-app/semillero-aws-ciber-reto1/
    pip3 install -r requirements.txt
    ```
 
