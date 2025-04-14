@@ -409,7 +409,7 @@ Se deja el paso a paso para que tengan presente cómo se configura y que se real
    ```bash
    # Crear directorio para la aplicación
     mkdir -p /home/ssm-user/hotel-app
-    cd /home/ssn-user/hotel-app
+    cd /home/ssm-user/hotel-app
 
     # Clonar el repositorio
     git clone https://github.com/danielr9911/semillero-aws-ciber-reto1.git .
