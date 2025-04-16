@@ -456,7 +456,7 @@ Para guardar los cambios en nano:
 
     [Service]
     User=ssm-user
-    WorkingDirectory=/home/ssm-user/hotel-app
+    WorkingDirectory=/home/ssm-user/hotel-app/semillero-aws-ciber-reto1
     ExecStart=/usr/bin/python3 app.py
     Restart=always
 
