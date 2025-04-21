@@ -473,24 +473,6 @@ Para guardar los cambios en nano:
     sudo systemctl status hotel-app
    ```
 
-9. **Verificar que la aplicación esté funcionando:**
-    - Abre un navegador web.
-    - Ingresa la dirección IP pública de tu instancia EC2 con el puerto 5000: http://[IP-PUBLICA]:5000
-    - Deberías ver la página de inicio del Sistema de Reservas del Hotel Cloud Suites.
-
-9. **Modificar las variables de entorno en la aplicación:**
-   ```bash
-   nano app.py
-   ```
-   - Busca y actualiza la siguiente variable: 
-     - S3_BUCKET_NAME: Nombre del bucket S3 que creaste (reemplaza tu usuario)
-   - Guarda el archivo (Ctrl+O, luego Enter, luego Ctrl+X).
-
-10. **Ejecutar la aplicación:**
-    ```bash
-    nohup python3 app.py &
-    ```
-    - Esto ejecutará la aplicación en segundo plano.
 
 ## Paso 11: Probar el sistema completo
 
