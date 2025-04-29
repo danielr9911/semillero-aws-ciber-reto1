@@ -562,3 +562,63 @@ Para registrar tu avance y enviar evidencias:
 
 Recuerda que los 5 participantes con mayor puntuación al final del reto obtendrán un reconocimiento.
 ¡Buena suerte en la implementación de tu sistema de reservas en la nube!
+
+
+# Guía para la eliminación de recursos 
+ 
+ Al finalizar el reto, es importante eliminar todos los recursos creados para evitar costos innecesarios y mantener limpia la cuenta AWS. Sigue este procedimiento en el orden indicado: 
+ 
+ ## 1. Eliminar la instancia EC2 
+ 
+ Servicios > EC2 > Instancias > Seleccionar semillero-[USUARIO]-HotelReservationWebServer >  
+ Estado de instancia > Terminar instancia 
+ 
+ 
+ ## 2. Eliminar la función Lambda 
+ 
+ Servicios > Lambda > Funciones >  
+ Seleccionar semillero-[USUARIO]-ValidateHotelReservation > Acciones > Eliminar 
+ 
+ 
+ ## 3. Eliminar la regla EventBridge 
+ 
+ Servicios > EventBridge > Reglas >  
+ Seleccionar semillero-[USUARIO]-HotelReservationValidator > Eliminar 
+ 
+ 
+ ## 4. Eliminar tema SNS y suscripción 
+ 
+ Servicios > SNS > Temas >  
+ Seleccionar semillero-[USUARIO]-HotelReservationConflicts > Eliminar 
+ 
+ 
+ ## 5. Vaciar y eliminar el bucket S3 
+ 
+ Servicios > S3 > Buckets >  
+ Seleccionar semillero-[USUARIO]-hotel-reservations > Vaciar >  
+ Confirmar vaciado > Eliminar > Confirmar eliminación 
+ 
+ 
+ ## 6. Eliminar tabla DynamoDB 
+ 
+ Servicios > DynamoDB > Tablas >  
+ Seleccionar semillero-[USUARIO]-HotelReservations > Eliminar 
+ 
+ 
+ ## 7. Eliminar roles IAM 
+ 
+ Servicios > IAM > Roles >  
+ Buscar y eliminar semillero-[USUARIO]-EC2HotelReservationRole 
+ Buscar y eliminar semillero-[USUARIO]-LambdaHotelReservationRole 
+ 
+ ## 8. Eliminar grupos de seguridad 
+ 
+ Servicios > EC2 > Seguridad > Grupos de seguridad >  
+ Eliminar semillero-[USUARIO]-sg-web-server 
+ Eliminar semillero-[USUARIO]-sg-lambda 
+ 
+ 
+ ## 9. Verificación final 
+ Utiliza la barra de búsqueda global con el prefijo semillero-[USUARIO] para asegurarte de que no queden recursos sin eliminar. 
+ 
+ > Importante: La eliminación de estos recursos es definitiva y los datos no se podrán recuperar.
